@@ -12,6 +12,9 @@ install: Makefile.coq
 clean: Makefile.coq
 	$(MAKE) -f Makefile.coq cleanall
 	rm -f Makefile.coq Makefile.coq.conf
+	
+	# Added to remove extracted files
+	rm -rf Extraction/Extracted/*
 
 Makefile.coq: _CoqProject
 	coq_makefile -f _CoqProject -o Makefile.coq
