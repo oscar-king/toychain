@@ -4,7 +4,7 @@ Require Import Eqdep.
 From fcsl
 Require Import pred prelude ordtype pcm finmap unionmap heap.
 From Toychain
-Require Import SeqFacts Chains Blocks.
+Require Import SeqFacts Chains Blocks SystemSetup.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -15,33 +15,25 @@ Unset Printing Implicit Defensive.
 (******************* <parameters> ***************************)
 (************************************************************)
 
-Parameter Timestamp : Type.
-Parameter Hash : ordType.
-Parameter VProof : eqType.
-Parameter Transaction : eqType.
-Parameter Address : finType.
-
-Definition block := @Block Hash Transaction VProof.
-
-Parameter GenesisBlock : block.
-
-Definition Blockchain := seq block.
-
-(* In fact, it's a forest, as it also keeps orphan blocks *)
-Definition BlockTree := union_map Hash block.
-
-(* Transaction pools *)
-Definition TxPool := seq Transaction.
-
-Parameter hashT : Transaction -> Hash.
-Parameter hashB : block -> Hash.
-Parameter genProof : Address -> Blockchain -> TxPool -> Timestamp -> option (TxPool * VProof).
-Parameter VAF : VProof -> Blockchain -> TxPool -> bool.
-Parameter FCR : Blockchain -> Blockchain -> bool.
-
-(* Transaction is valid and consistent with the given chain *)
-Parameter txValid : Transaction -> Blockchain -> bool.
-Parameter tpExtend : TxPool -> BlockTree -> Transaction -> TxPool.
+(* Module Forests (setup:Params). *)
+(* 
+Definition Hash := setup.Hash.
+Definition Transaction := setup.Transaction.
+Definition VProof:= setup.VProof.
+Definition FCR := setup.FCR.
+Definition Timestamp := setup.Timestamp.
+Definition Address := setup.Address.
+Definition GenesisBlock := setup.GenesisBlock.
+Definition hashT := setup.hashT.
+Definition hashB := setup.hashB.
+Definition genProof := setup.genProof.
+Definition VAF := setup.VAF.
+Definition txValid := setup.txValid.
+Definition tpExtend := setup.tpExtend.
+Definition Blockchain := setup.Blockchain.
+Definition block := setup.block.
+Definition TxPool := setup.TxPool.
+Definition BlockTree := setup.BlockTree. *)
 
 (************************************************************)
 (********************* </parameters> ************************)
@@ -1924,3 +1916,4 @@ by move: (btExtend_within V Vh Hib Vl Vhl Hil Hg Hg' T Geq P Ec H1).
 Qed.
 
 End BtChainProperties.
+(* End Forests. *)

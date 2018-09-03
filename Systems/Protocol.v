@@ -4,10 +4,30 @@ Require Import Eqdep.
 From fcsl
 Require Import pred prelude ordtype pcm finmap unionmap heap.
 From Toychain
-Require Import SeqFacts Chains Blocks Forests.
+Require Import SeqFacts Chains Blocks Forests SystemSetup.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
+Require Extraction.
+(* 
+Definition Hash := sysSetup.Hash.
+Definition Transaction := sysSetup.Transaction.
+Definition VProof:= sysSetup.VProof.
+Definition FCR := sysSetup.FCR.
+Definition Timestamp := sysSetup.Timestamp.
+Definition Address := sysSetup.Address.
+Definition block := sysSetup.block.
+Definition GenesisBlock := sysSetup.GenesisBlock.
+Definition hashT := sysSetup.hashT.
+Definition hashB := sysSetup.hashB.
+Definition genProof := sysSetup.genProof.
+Definition VAF := sysSetup.VAF.
+Definition txValid := sysSetup.txValid.
+Definition tpExtend := sysSetup.tpExtend.
+Definition Blockchain := sysSetup.Blockchain.
+Definition TxPool := sysSetup.TxPool.
+Definition BlockTree := sysSetup.BlockTree. *)
+
 
 (* Implementation of PoS protocol as a STS *)
 Definition peers_t := seq Address.
@@ -149,7 +169,6 @@ Canonical Packet_eqType := Eval hnf in EqType Packet Packet_eqMixin.
 End PacketEq.
 Export PacketEq.
 
-
 Definition ToSend := seq Packet.
 Definition emitZero : ToSend := [::].
 Definition emitOne (packet : Packet) : ToSend := [:: packet].
@@ -168,6 +187,7 @@ Record State :=
 
 Definition Init (n : Address) : State :=
   Node n [:: n] (#GenesisBlock \\-> GenesisBlock) [::].
+
 Lemma peers_uniq_init (n : Address) : uniq [::n]. Proof. by []. Qed.
 
 Definition procMsg (st: State) (from : Address) (msg: Message) (ts: Timestamp) :=
@@ -222,7 +242,6 @@ Definition procInt (st : State) (tr : InternalTransition) (ts : Timestamp) :=
     let: Node n prs bt pool := st in
     match tr with
     | TxT tx => pair st (emitBroadcast n prs (TxMsg tx))
-
     (* Assumption: nodes broadcast to themselves as well! => simplifies logic *)
     | MintT =>
       let: bc := btChain bt in

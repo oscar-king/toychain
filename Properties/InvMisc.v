@@ -4,7 +4,7 @@ Require Import Eqdep.
 From fcsl
 Require Import pred prelude ordtype pcm finmap unionmap heap.
 From Toychain
-Require Import SeqFacts Protocol Chains Blocks Forests States Network.
+Require Import SeqFacts Protocol Chains Blocks Forests States Network SystemSetup.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -139,3 +139,31 @@ Definition block_for_hash n (w : World) (h : Hash) : Block :=
 (*                                  dst p == n && *)
 (*                                  available (msg_block (msg p)) n w]. *)
 
+(* Module Seq_as_OT <: OrderedType.
+
+     Definition t : Set := (list Transaction).
+     Definition eq : list Transaction -> list Transaction -> Prop := eq.
+    
+     Definition eq_refl : forall x : t, x = x.
+     Proof. by []. Qed.
+     Definition eq_sym : forall x y : t, x = y -> y = x.
+     Proof. by []. Qed.
+     Definition eq_trans : forall x y z : t, x = y -> y = z -> x = z.
+     Proof. apply eq_trans. Qed.
+     Definition lt : list Transaction -> list Transaction -> Prop := fun a b => (length a) < (length b).
+     Parameter lt_trans : forall x y z : t, lt x y -> lt y z -> lt x z.
+     Parameter lt_not_eq : forall x y : t, lt x y -> ~ eq x y.
+     Definition compare : forall x y : list Transaction, Compare lt eq x y.
+     Proof.
+        induction x.
+        induction y.
+          by constructor 2.
+          by constructor 1.
+        Admitted.
+       
+     Definition eq_dec : forall n m : list Transaction, {n = m} + {n <> m}.
+     Proof.
+
+     Admitted.
+     
+End Seq_as_OT. *)
