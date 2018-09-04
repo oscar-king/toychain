@@ -19,4 +19,7 @@ clean: Makefile.coq
 Makefile.coq: _CoqProject
 	coq_makefile -f _CoqProject -o Makefile.coq
 
+Test.d.byte: default
+	ocamlbuild -tag safe_string -libs unix -I Extraction/Extracted -I Shims Shims/test.d.byte
+
 .PHONY: all default quick install clean

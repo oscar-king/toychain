@@ -1,31 +1,34 @@
-(* Cd "Extraction". *)
 From Toychain
-Require Import SeqFacts Chains Blocks Forests SystemSetup Protocol.
+Require Import SeqFacts Chains Blocks Forests SystemSetup Protocol Network.
 Require Extraction.
 
-Extract Inlined Constant Hash  => "Type".
-Extract Inlined Constant VProof => "Type".
-Extract Inlined Constant Transaction => "Type".
-Extract Inlined Constant block  => "Type".
-Extract Inlined Constant TxPool  => "Type".
-Extract Inlined Constant Blockchain  => "Type".
-Extract Inlined Constant BlockTree  => "Type".
-Extract Inlined Constant Timestamp  => "Type".
+(* Extract Constant Hash  => "unit".
+Extract Constant VProof => "unit".
+Extract Constant Transaction => "unit". *)
+(* Extract Constant block  => "coq_Block". *)
+(* Extract Constant TxPool  => "list coq_Transaction". *)
+(* Extract Constant Blockchain  => "list block". *)
+(* Extract Constant BlockTree  => "unit". *)
+Extract Constant Timestamp  => "float".
 
-(* Extract Inlined Constant Address => "Type".
-Extract Constant peers_t => "coq_Address list".
-Extract Constant genProof => "Type".
-Extract Constant txValid => "Type".
-Extract Constant hashT => "Type".
-Extract Constant hashB => "Type".
-Extract Constant VAF => "Type".
-Extract Constant FCR => "Type".
-Extract Constant tpExtend => "Type".
-Extract Constant GenesisBlock => "block". *)
+(* Extract Constant Address => "procAddress". *)
+(* Extract Constant peers_t => "procAddress list". *)
+(* Extract Constant genProof => "Type". *)
+(* Extract Constant txValid => "Type". *)
+
+(* Extract Constant hashT => "Type". *)
+(* Extract Constant hashB => "Type". *)
+(* Extract Constant VAF => "Type". *)
+(* Extract Constant FCR => "Type". *)
+(* Extract Constant tpExtend => "Type". *)
+(* Extract Constant GenesisBlock => "block". *)
+
 
 Cd "Extraction".
     Cd "Extracted".
-    Recursive Extraction Packet.
-    Separate Extraction Message MessageType State Init procMsg procInt.
+        Separate Extraction Packet Toychain.Protocol.Init procMsg procInt initWorld.
     Cd "..".
 Cd "..".
+Print Extraction Inline.
+
+(* Message MessageType State  *)

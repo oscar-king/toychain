@@ -9,24 +9,6 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Extraction.
-(* 
-Definition Hash := sysSetup.Hash.
-Definition Transaction := sysSetup.Transaction.
-Definition VProof:= sysSetup.VProof.
-Definition FCR := sysSetup.FCR.
-Definition Timestamp := sysSetup.Timestamp.
-Definition Address := sysSetup.Address.
-Definition block := sysSetup.block.
-Definition GenesisBlock := sysSetup.GenesisBlock.
-Definition hashT := sysSetup.hashT.
-Definition hashB := sysSetup.hashB.
-Definition genProof := sysSetup.genProof.
-Definition VAF := sysSetup.VAF.
-Definition txValid := sysSetup.txValid.
-Definition tpExtend := sysSetup.tpExtend.
-Definition Blockchain := sysSetup.Blockchain.
-Definition TxPool := sysSetup.TxPool.
-Definition BlockTree := sysSetup.BlockTree. *)
 
 
 (* Implementation of PoS protocol as a STS *)

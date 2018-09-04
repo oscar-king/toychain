@@ -76,9 +76,12 @@ cv/*.out
 \#*\#
 *.vo
 *.v.d
+_build
 *.glob
 .coq-native
 Makefile.coq
+Extraction/Extracted/**/*.mli
+Extraction/Extracted/**/*.ml
 *.aux
 CoqMakefile.conf
 Makefile.coq.conf

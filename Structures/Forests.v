@@ -15,26 +15,6 @@ Unset Printing Implicit Defensive.
 (******************* <parameters> ***************************)
 (************************************************************)
 
-(* Module Forests (setup:Params). *)
-(* 
-Definition Hash := setup.Hash.
-Definition Transaction := setup.Transaction.
-Definition VProof:= setup.VProof.
-Definition FCR := setup.FCR.
-Definition Timestamp := setup.Timestamp.
-Definition Address := setup.Address.
-Definition GenesisBlock := setup.GenesisBlock.
-Definition hashT := setup.hashT.
-Definition hashB := setup.hashB.
-Definition genProof := setup.genProof.
-Definition VAF := setup.VAF.
-Definition txValid := setup.txValid.
-Definition tpExtend := setup.tpExtend.
-Definition Blockchain := setup.Blockchain.
-Definition block := setup.block.
-Definition TxPool := setup.TxPool.
-Definition BlockTree := setup.BlockTree. *)
-
 (************************************************************)
 (********************* </parameters> ************************)
 (************************************************************)

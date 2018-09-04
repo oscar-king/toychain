@@ -10,12 +10,14 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Extraction.
 
+
+
 Parameter Hash : ordType.
 Parameter VProof : eqType.
 Parameter Transaction : eqType.
 
 Definition block: Type := @Block Hash Transaction VProof.
-Definition TxPool := seq Transaction.
+Definition TxPool: Type := seq Transaction.
 Definition Blockchain := seq block.
 Definition BlockTree := union_map Hash block.
 
@@ -31,3 +33,4 @@ Parameter FCR : Blockchain -> Blockchain -> bool.
 (* Transaction is valid and consistent with the given chain *)
 Parameter txValid : Transaction -> Blockchain -> bool.
 Parameter tpExtend : TxPool -> BlockTree -> Transaction -> TxPool.
+
