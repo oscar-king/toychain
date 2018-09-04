@@ -83,6 +83,7 @@ let recv_connect_msg (packet: procPacket) (fd: file_descr): unit =
   Printf.printf "done processing new connection from node (%s,%i)\n" packet.src.ip packet.src.port
 
 let setup (lstate: lstate): unit =
+  Printexc.record_backtrace true;
   the_lstate := Some lstate;
   Printf.printf "listening on port %d" lstate.me.port; print_newline ();
   setsockopt listen_fd SO_REUSEADDR true;
