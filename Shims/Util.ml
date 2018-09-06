@@ -1,4 +1,4 @@
-type procAddress = {
+type procAddress = mkAddr {
   ip: string;
   port: int
 }

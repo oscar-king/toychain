@@ -7,6 +7,7 @@ Structures/SystemSetup.v
 Structures/SeqFacts.v
 Structures/Chains.v
 Structures/Blocks.v
+Structures/Misc.v
 Structures/Forests.v
 Systems/Protocol.v
 Systems/States.v

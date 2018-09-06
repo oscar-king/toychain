@@ -1,10 +1,15 @@
 From Toychain
-Require Import SeqFacts Chains Blocks Forests SystemSetup Protocol Network.
+Require Import SeqFacts Chains Blocks Forests SystemSetup Network Protocol Misc.
 Require Extraction.
 
-(* Extract Constant Hash  => "unit".
-Extract Constant VProof => "unit".
-Extract Constant Transaction => "unit". *)
+(* 
+    The realisations made (some of which are commented out) are for test purposes. e.g. I don't plan on extracting VProof to unit.
+ *)
+
+
+(* Extract Constant Hash  => "string". *)
+(* Extract Constant VProof => "unit". *)
+(* Extract Constant Transaction => "string". *)
 (* Extract Constant block  => "coq_Block". *)
 (* Extract Constant TxPool  => "list coq_Transaction". *)
 (* Extract Constant Blockchain  => "list block". *)
@@ -30,5 +35,12 @@ Cd "Extraction".
     Cd "..".
 Cd "..".
 Print Extraction Inline.
+
+(* Cd "Extraction".
+    Cd "Extracted".
+        Separate Extraction SystemSetup.
+    Cd "..".
+Cd "..".
+Print Extraction Inline. *)
 
 (* Message MessageType State  *)
