@@ -39,6 +39,7 @@ Definition Coh (w : World) :=
 
 Record Qualifier := Q { ts: Timestamp; allowed: Address; }.
 
+
 (* Don't you worry about uniqueness of the messages? *)
 Inductive system_step (w w' : World) (q : Qualifier) : Prop :=
 | Idle of Coh w /\ w = w'
@@ -89,9 +90,9 @@ Lemma holds_Init_state : forall (P : State -> Prop) n, P (Init n) ->
   holds n {| localState := initState; inFlightMsgs := [::]; consumedMsgs := [::] |} (fun st : State => P st).
 Proof.
 move => P n H_P; rewrite /initState.
-have H_in: n \in enum Address by rewrite mem_enum.
-have H_un: uniq (enum Address) by apply enum_uniq.
-move: H_in H_un; elim: (enum Address) => //=.
+have H_in: n \in enum [finType of Address] by rewrite mem_enum.
+have H_un: uniq (enum [finType of Address]) by apply enum_uniq.
+move: H_in H_un; elim: (enum [finType of Address]) => //=.
 move => a s IH; rewrite inE; move/orP; case.
 * move/eqP => H_eq /=.
   rewrite H_eq; move/andP => [H_in H_u].
