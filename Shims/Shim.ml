@@ -1,21 +1,22 @@
 open Unix
 open Util
+open Misc
 (* open Protocol *)
 (* open Debug *)
 
 (* Hashtables of size 17, obviously not ideal *)
-let read_fds : (Unix.file_descr, procAddress) Hashtbl.t = Hashtbl.create 17
-let write_fds : (procAddress, Unix.file_descr) Hashtbl.t = Hashtbl.create 17
+let read_fds : (Unix.file_descr, coq_Address) Hashtbl.t = Hashtbl.create 17
+let write_fds : (coq_Address, Unix.file_descr) Hashtbl.t = Hashtbl.create 17
 
 type lstate = { 
-            me: procAddress;
-            nodes : procAddress list
+            me: coq_Address;
+            nodes : coq_Address list
            }
 
 let the_lstate : lstate option ref = ref None
 let listen_fd : file_descr = socket PF_INET SOCK_STREAM 0
 
-let get_name_for_read_fd (fd: file_descr): procAddress =
+let get_name_for_read_fd (fd: file_descr): coq_Address =
   Hashtbl.find read_fds fd
 
 let send_chunk (fd : file_descr) (buf : bytes) : unit =
@@ -51,25 +52,25 @@ let get_lstate (err_msg: string): lstate =
   | None -> failwith (err_msg ^ " called before the_lstate was set")
   | Some lstate -> lstate
 
-let get_write_fd (node: procAddress): file_descr =
+let get_write_fd (node: coq_Address): file_descr =
   try Hashtbl.find write_fds node
   with Not_found ->
     let write_fd = socket PF_INET SOCK_STREAM 0 in
     let entry = gethostbyname node.ip in
-    let node_addr = ADDR_INET (Array.get entry.h_addr_list 0, node.port) in
+    let node_addr = ADDR_INET (Array.get entry.h_addr_list 0, (int_of_nat node.port)) in
     connect write_fd node_addr;
     Hashtbl.add write_fds node write_fd;
     write_fd
 
-let recv_data_msg (packet: procPacket): unit = 
+let recv_data_msg (packet: coq_Packet): unit = 
   let src = packet.src in
   let msg = packet.msg in
   let lstate = get_lstate "recv_data_msg" in
-  Printf.printf "Got data from (%s,%i) msg: %s\n" src.ip src.port (printHelp msg);
-  Printf.printf "Me: (%s,%i)\n" lstate.me.ip lstate.me.port
+  Printf.printf "Got data from (%s,%i) msg: %s\n" from.ip (int_of_nat from.port) (printHelp msg);
+  Printf.printf "Me: (%s,%i)\n" lstate.me.ip (int_of_nat lstate.me.port)
 
 (* Still need to implement hs = dom(bf) U {#tx|tx e tp} *)
-let recv_connect_msg (packet: procPacket) (fd: file_descr): unit = 
+let recv_connect_msg (packet: coq_Packet) (fd: file_descr): unit = 
   Hashtbl.add read_fds fd packet.src;
   let lstate = get_lstate "recv_connect_msg" in
   
@@ -80,41 +81,41 @@ let recv_connect_msg (packet: procPacket) (fd: file_descr): unit =
   if not (List.mem packet.src lstate.nodes) 
     then 
         the_lstate := Some {me = lstate.me; nodes = lstate.nodes @ [packet.src]};
-  Printf.printf "done processing new connection from node (%s,%i)\n" packet.src.ip packet.src.port
+  Printf.printf "done processing new connection from node (%s,%i)\n" packet.from.ip (int_of_nat packet.from.port)
 
 let setup (lstate: lstate): unit =
   Printexc.record_backtrace true;
   the_lstate := Some lstate;
-  Printf.printf "listening on port %d" lstate.me.port; print_newline ();
+  Printf.printf "listening on port %d" (int_of_nat lstate.me.port); print_newline ();
   setsockopt listen_fd SO_REUSEADDR true;
-  bind listen_fd (ADDR_INET (inet_addr_any, lstate.me.port));
+  bind listen_fd (ADDR_INET (inet_addr_any, (int_of_nat lstate.me.port)));
   listen listen_fd 10
 
 let get_all_read_fds (): file_descr list =
   Hashtbl.fold (fun fd _ acc -> fd :: acc) read_fds []
   
-let serialize (packet: procPacket): bytes =
+let serialize (packet: coq_Packet): bytes =
   Marshal.to_bytes packet []
 
-let deserialize (s: bytes): procPacket =
+let deserialize (s: bytes): coq_Packet =
   Marshal.from_bytes s 0
 
-let recv_packet (fd: file_descr):procPacket =
+let recv_packet (fd: file_descr):coq_Packet =
   let chunk = receive_chunk fd in
   let packet = deserialize chunk in
   let src = packet.src in 
   let msg = printHelp packet.msg in
-  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" src.ip src.port msg;
+  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" from.ip (int_of_nat from.port) msg;
   packet
 
-let send_packet (packet:procPacket): unit =
+let send_packet (packet:coq_Packet): unit =
   let dst = packet.dst in
-  Printf.printf "\nsending msg to (%s,%i)\n" dst.ip dst.port;
+  Printf.printf "\nsending msg dst (%s,%i)\n" dst.ip (int_of_nat dst.port);
   let fd = get_write_fd dst in
   let serializedPacket = serialize packet in
   send_chunk fd serializedPacket
 
-let recv_addr_msg (packet: procPacket) (addresses: procAddress list): unit =
+let recv_addr_msg (packet: coq_Packet) (addresses: coq_Address list): unit =
   let lstate = get_lstate "recv_addr_msg" in
   let locAddr = lstate.nodes in
   let lsDiff = List.filter (fun x -> not (List.mem x locAddr)) addresses in

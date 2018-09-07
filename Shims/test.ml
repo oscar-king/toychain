@@ -2,8 +2,8 @@ open Util
 open Shim
 open Runner
 
-let me : procAddress ref = ref {ip = "test"; port=0000}
-let nodes : procAddress list ref = ref []
+let me : coq_Address ref = ref {ip = "test"; port= nat_of_int 0000}
+let nodes : coq_Address list ref = ref []
 
 let usage msg =
   print_endline msg;
@@ -23,11 +23,11 @@ let rec parse_args = function
   | [] -> ()
   | "-nodes" :: ip :: port :: args ->
      begin
-       me := {ip = ip; port = int_of_string port};
+       me := {ip = ip; port = nat_of_string port};
        parse_args args
      end
   | ip :: port :: args -> begin
-      nodes := {ip = ip; port = int_of_string port} :: !nodes;
+      nodes := {ip = ip; port = nat_of_string port} :: !nodes;
       parse_args args
     end
   | arg :: args ->

@@ -1,35 +1,24 @@
 open Misc
+open Datatypes
+open Protocol
 (* type procAddress = mkAddr {
   ip: string;
   port: int
 } *)
 
-type procAddress = coq_Address
+let int_of_nat =
+  let rec loop acc = function
+  | O -> acc
+  | S n0 -> loop (succ acc) n0
+  in loop 0
 
-type procMessage = 
-  | NullMsg
-  | ConnectMsg 
-  | AddrMsg of (procAddress list)
-  | DataMsg of string
+let printAddrList (ls : peers_t): unit = 
+  List.iter (fun x -> Printf.printf "Address:\t (%s,%i)\n" x.ip (int_of_nat x.port)) ls
 
-type procPacket = {
-  src:procAddress;
-  dst:procAddress;
-  msg:procMessage
-  }
-
-type nat =
-| O
-| S of nat
-
-let printAddrList ls = 
-  List.iter (fun x -> Printf.printf "Address:\t (%s,%i)\n" x.ip x.port) ls
-
-let printHelp (msg: procMessage)= 
+let printHelp (msg: coq_Message)= 
   match msg with
  | ConnectMsg -> "ConnectMsg"
  | AddrMsg ls -> "AddrMsg"
- | DataMsg a -> a
  | NullMsg -> "NullMsg"
 
 let rec add n m =
@@ -51,11 +40,6 @@ let int_natlike_rec = fun fO fS ->
 let nat_of_int =
   int_natlike_rec O (fun x -> S x)
 
-let int_of_nat =
-  let rec loop acc = function
-  | O -> acc
-  | S n0 -> loop (succ acc) n0
-  in loop 0
 
 let nat_of_string s = nat_of_int (int_of_string s)
 let string_of_nat n = string_of_int (int_of_nat n)

@@ -4,11 +4,11 @@ open Shim
 
 let aux lstate = 
     let me = lstate in
-    match me.me.port with
-        | 9001 -> send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = 9002}; msg = ConnectMsg}
-        | 9002 -> send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = 9003}; msg = ConnectMsg};
-                  send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = 9001}; msg = AddrMsg me.nodes};
-                  send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = 9003}; msg = AddrMsg me.nodes};
+    match (int_of_nat me.me.port) with
+        | 9001 -> send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = nat_of_int 9002}; msg = ConnectMsg}
+        | 9002 -> send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = nat_of_int 9003}; msg = ConnectMsg};
+                  send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = nat_of_int 9001}; msg = AddrMsg me.nodes};
+                  send_action_wrapper {src = me.me; dst = {ip = "127.0.0.1"; port = nat_of_int 9003}; msg = AddrMsg me.nodes};
         | 9003 -> send_action_wrapper {src = me.me; dst = me.me; msg = NullMsg};
         | _ -> send_action_wrapper {src = me.me; dst = me.me; msg = NullMsg}
 

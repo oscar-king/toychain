@@ -10,67 +10,30 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Extraction.
 
-Parameter Transaction : Transaction.
 
-Parameter Hash : ordType.
-Parameter VProof : eqType.
+(* These have all been defined in Misc *)
+(* Parameter Transaction : Misc.Transaction. *)
+(* Parameter Hash : Misc.Hash. *)
+(* Parameter VProof : Misc.VProof. *)
+(* Parameter Address : Misc.Address. *)
 
-Definition block: Type := @Block Hash [eqType of Misc.Transaction] VProof.
+Definition block: Type := @Block [ordType of Misc.Hash] [eqType of Misc.Transaction] [eqType of Misc.VProof].
 Definition TxPool: Type := seq Misc.Transaction.
 Definition Blockchain := seq block.
-Definition BlockTree := union_map Hash block.
+Definition BlockTree := union_map [ordType of Misc.Hash] block.
 
 Parameter Timestamp : Type.
-Parameter Address : Address.
+
+(* TODO: GenesisBlock still needs defining *)
 Parameter GenesisBlock : block.
 
 (* These functions need to be implemented *)
-Parameter hashT : Misc.Transaction -> Hash.
-Parameter hashB : block -> Hash.
-Parameter genProof : Misc.Address -> Blockchain -> TxPool -> Timestamp -> option (TxPool * VProof).
-Parameter VAF : VProof -> Blockchain -> TxPool -> bool.
+Parameter hashT : Misc.Transaction -> Misc.Hash.
+Parameter hashB : block -> [ordType of Misc.Hash].
+Parameter genProof : Misc.Address -> Blockchain -> TxPool -> Timestamp -> option (TxPool * Misc.VProof).
+Parameter VAF : Misc.VProof -> Blockchain -> TxPool -> bool.
 Parameter FCR : Blockchain -> Blockchain -> bool.
 
 (* Transaction is valid and consistent with the given chain *)
 Parameter txValid : Misc.Transaction -> Blockchain -> bool.
 Parameter tpExtend : TxPool -> BlockTree -> Misc.Transaction -> TxPool.
-
-(* Structure setup1 := set1 {
-    Transaction:eqType;
-    Hash:ordType;
-    VProof:eqType;
-    Timestamp:Type;
-    Address:finType;
-}.
-
-Parameter sysSet1:setup1.
-Definition block: Type := @Block sysSet1.Hash sysSet1.Transaction sysSet1.VProof.
-Definition TxPool: Type := seq sysSet1.Transaction.
-Definition Blockchain := seq block.
-Definition BlockTree := union_map sysSet1.Hash block. *)
-(* 
-
-Parameter Transaction : eqType.
-
-Parameter Hash : ordType.
-Parameter VProof : eqType.
-
-Definition block: Type := @Block Hash Transaction VProof.
-Definition TxPool: Type := seq Transaction.
-Definition Blockchain := seq block.
-Definition BlockTree := union_map Hash block.
-
-Parameter Timestamp : Type.
-Parameter Address : Address.
-Parameter GenesisBlock : block.
-
-(* These functions need to be implemented *)
-Parameter hashT : Transaction -> Hash.
-Parameter hashB : block -> Hash.
-Parameter genProof : Misc.Address -> Blockchain -> TxPool -> Timestamp -> option (TxPool * VProof).
-Parameter VAF : VProof -> Blockchain -> TxPool -> bool.
-Parameter FCR : Blockchain -> Blockchain -> bool.
-
-(* Transaction is valid and consistent with the given chain *)
-Parameter txValid : Transaction -> Blockchain -> bool.
-Parameter tpExtend : TxPool -> BlockTree -> Transaction -> TxPool. *)

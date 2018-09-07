@@ -35,8 +35,6 @@ Canonical Addr_CountType := Eval hnf in CountType Address AddrCountMixin.
 Axiom AddrFinMixin : Finite.mixin_of Addr_CountType.
 Canonical AddrFinType := Eval hnf in FinType Address AddrCountMixin.
 
-
-
 Record Transaction:Type := mkTx {
     from:Address;
     to:Address;
@@ -56,3 +54,16 @@ Qed.
 
 Canonical Trans_eqMixin := Eval hnf in EqMixin eq_transP.
 Canonical Trans_eqType := Eval hnf in EqType Transaction Trans_eqMixin.
+
+Parameter Hash:Type.
+
+Axiom Hash_eqMixin : Equality.mixin_of Hash.
+Canonical Hash_eqType := Eval hnf in EqType Hash Hash_eqMixin.
+
+Axiom Hash_ordMixin : Ordered.mixin_of Hash_eqType.
+Canonical Hash_ordType := Eval hnf in OrdType Hash Hash_ordMixin.
+
+Parameter VProof:Type.
+
+Axiom VProof_eqMixin : Equality.mixin_of VProof.
+Canonical VProof_eqType := Eval hnf in EqType VProof VProof_eqMixin.
