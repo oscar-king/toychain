@@ -9,7 +9,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Extraction.
-(* 
+
 Parameter Transaction : Transaction.
 
 Parameter Hash : ordType.
@@ -33,7 +33,7 @@ Parameter FCR : Blockchain -> Blockchain -> bool.
 
 (* Transaction is valid and consistent with the given chain *)
 Parameter txValid : Misc.Transaction -> Blockchain -> bool.
-Parameter tpExtend : TxPool -> BlockTree -> Misc.Transaction -> TxPool. *)
+Parameter tpExtend : TxPool -> BlockTree -> Misc.Transaction -> TxPool.
 
 (* Structure setup1 := set1 {
     Transaction:eqType;
@@ -48,7 +48,7 @@ Definition block: Type := @Block sysSet1.Hash sysSet1.Transaction sysSet1.VProof
 Definition TxPool: Type := seq sysSet1.Transaction.
 Definition Blockchain := seq block.
 Definition BlockTree := union_map sysSet1.Hash block. *)
-
+(* 
 
 Parameter Transaction : eqType.
 
@@ -73,4 +73,4 @@ Parameter FCR : Blockchain -> Blockchain -> bool.
 
 (* Transaction is valid and consistent with the given chain *)
 Parameter txValid : Transaction -> Blockchain -> bool.
-Parameter tpExtend : TxPool -> BlockTree -> Transaction -> TxPool.
+Parameter tpExtend : TxPool -> BlockTree -> Transaction -> TxPool. *)

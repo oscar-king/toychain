@@ -1,7 +1,10 @@
-type procAddress = mkAddr {
+open Misc
+(* type procAddress = mkAddr {
   ip: string;
   port: int
-}
+} *)
+
+type procAddress = coq_Address
 
 type procMessage = 
   | NullMsg

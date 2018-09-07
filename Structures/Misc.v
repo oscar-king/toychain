@@ -14,7 +14,7 @@ Record Address: Type := mkAddr {
     ip:string;
     port:nat
 }.
-Search "eqType".
+
 Definition addr_eq (a b: Address) := (string_dec (ip a) (ip b)) && (port a==port b).
 
 Lemma eq_addrP : Equality.axiom addr_eq. 
@@ -35,14 +35,15 @@ Canonical Addr_CountType := Eval hnf in CountType Address AddrCountMixin.
 Axiom AddrFinMixin : Finite.mixin_of Addr_CountType.
 Canonical AddrFinType := Eval hnf in FinType Address AddrCountMixin.
 
-(* Record Transaction:Type := mkTx {
-    src:Address;
-    dst:Address;
+
+
+Record Transaction:Type := mkTx {
+    from:Address;
+    to:Address;
     val:nat;
 }.
 
-
-Definition trans_eq (a b:Transaction):= ((src a) == (src b)) && ((dst a) == (dst b)) && ((val a) == (val b)).
+Definition trans_eq (a b:Transaction):= ((from a) == (from b)) && ((to a) == (to b)) && ((val a) == (val b)).
 Lemma eq_transP : Equality.axiom trans_eq.
 
 Proof.
@@ -54,4 +55,4 @@ Proof.
 Qed.
 
 Canonical Trans_eqMixin := Eval hnf in EqMixin eq_transP.
-Canonical Trans_eqType := Eval hnf in EqType Transaction Trans_eqMixin. *)
+Canonical Trans_eqType := Eval hnf in EqType Transaction Trans_eqMixin.

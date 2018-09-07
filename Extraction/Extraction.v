@@ -1,6 +1,7 @@
 From Toychain
 Require Import SeqFacts Chains Blocks Forests SystemSetup Network Protocol Misc.
 Require Extraction.
+Require String.
 
 (* 
     The realisations made (some of which are commented out) are for test purposes. e.g. I don't plan on extracting VProof to unit.
@@ -15,6 +16,7 @@ Require Extraction.
 (* Extract Constant Blockchain  => "list block". *)
 (* Extract Constant BlockTree  => "unit". *)
 Extract Constant Timestamp  => "float".
+Extract Inductive String.string => "string" ["EmptyString" "String"].
 
 (* Extract Constant Address => "procAddress". *)
 (* Extract Constant peers_t => "procAddress list". *)
