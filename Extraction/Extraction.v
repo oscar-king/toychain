@@ -12,13 +12,14 @@ Extract Constant Hash  => "string".
 Extract Constant VProof => "string".
 Extract Constant Timestamp  => "float".
 Extract Inductive String.string => "string" ["EmptyString" "String"].
-Extract Inductive list => "list" [ "[]" "(::)" ].
-Extract Inductive prod => "(*)"  [ "(,)" ].
-Extract Inductive bool => "bool" [ "true" "false" ].
-Extract Inductive option => "option" ["Some" "None"].
-Extraction Inline negb.
-Extraction Inline fst.
+(* Extract Inductive list => "list" [ "[]" "(::)" ]. *)
+(*Extract Inductive prod => "(*)"  [ "(,)" ].*)
+(* Extract Inductive bool => "bool" [ "true" "false" ]. *)
+(* Extract Inductive option => "option" ["Some" "None"]. *)
 
+(* Extraction Inline negb. *)
+(* Extraction Inline fst. *)
+(* Extract Constant peers_t => "coq_Address List.list". *)
 (* Extract Constant genProof => "Type". *)
 (* Extract Constant txValid => "Type". *)
 (* Extract Constant hashT => "Type". *)
@@ -31,7 +32,7 @@ Extraction Inline fst.
 
 Cd "Extraction".
     Cd "Extracted".
-        Separate Extraction Packet Message Toychain.Protocol.Init procMsg procInt initWorld.
+        Separate Extraction Toychain.Protocol.Init procMsg procInt initWorld.
     Cd "..".
 Cd "..".
 Print Extraction Inline.

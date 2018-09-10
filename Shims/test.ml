@@ -1,6 +1,7 @@
 open Util
 open Shim
 open Runner
+open Misc
 
 let me : coq_Address ref = ref {ip = "test"; port= nat_of_int 0000}
 let nodes : coq_Address list ref = ref []
