@@ -16,21 +16,11 @@ Extraction Inline ssrbool.simpl_pred.
 Extract Constant Hash  => "string".
 Extract Constant VProof => "string".
 Extract Constant Timestamp  => "float".
-<<<<<<< HEAD
 (* Extract Inductive String.string => "string" ["EmptyString" "String"]. *)
 (* Extract Inductive list => "list" [ "[]" "(::)" ]. *)
 (*Extract Inductive prod => "(*)"  [ "(,)" ].*)
 (* Extract Inductive bool => "bool" [ "true" "false" ]. *)
 (* Extract Inductive option => "option" ["Some" "None"]. *)
-=======
-Extract Inductive String.string => "string" ["EmptyString" "String"].
-Extract Inductive list => "list" [ "[]" "(::)" ].
-Extract Inductive prod => "(*)"  [ "(,)" ].
-Extract Inductive bool => "bool" [ "true" "false" ].
-Extract Inductive option => "option" ["Some" "None"].
-Extraction Inline negb.
-Extraction Inline fst.
->>>>>>> parent of 186d08d... Still fixing issues
 
 (* Extract Constant genProof => "Type". *)
 (* Extract Constant txValid => "Type". *)
@@ -43,10 +33,8 @@ Extraction Inline fst.
 
 Cd "Extraction".
     Cd "Extracted".
-<<<<<<< HEAD
-        Separate Extraction Toychain.Protocol.Init procMsg procInt initWorld. 
-=======
-        Separate Extraction Packet Message Toychain.Protocol.Init procMsg procInt initWorld.
->>>>>>> parent of 186d08d... Still fixing issues
+        Separate Extraction Toychain.Protocol.Init procMsg procInt initWorld.
     Cd "..".
 Cd "..".
+
+
