@@ -18,9 +18,9 @@ Inductive Message :=
   | AddrMsg of peers_t
   | ConnectMsg 
   | BlockMsg of block
-  | TxMsg of [eqType of Misc.Transaction]
-  | InvMsg of seq [ordType of Misc.Hash]
-  | GetDataMsg of [ordType of Misc.Hash].
+  | TxMsg of Transaction
+  | InvMsg of seq Hash
+  | GetDataMsg of Hash.
 
 Inductive MessageType :=
   | MAddr
@@ -77,7 +77,7 @@ Definition msg_hashes (msg : Message) : seq Hash :=
   end.
 
 Inductive InternalTransition :=
-  | TxT of [eqType of Misc.Transaction]
+  | TxT of Transaction
   | MintT.
 
 Module MsgEq.

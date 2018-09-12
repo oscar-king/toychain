@@ -10,60 +10,71 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Import String.
 
-Record Address: Type := mkAddr {
-    ip:string;
-    port:nat
-}.
+Section Types.
+    Record Address: Type := mkAddr {
+        ip:nat*nat*nat*nat;
+        port:nat
+    }.
 
-Definition addr_eq (a b: Address) := (string_dec (ip a) (ip b)) && (port a==port b).
+    Record Transaction:Type := mkTx {
+        from:Address;
+        to:Address;
+        val:nat
+    }.
 
-Lemma eq_addrP : Equality.axiom addr_eq. 
-Admitted.
+    Parameter Hash:Type.
 
-Canonical addr_eqMixin:= Eval hnf in EqMixin eq_addrP.
+    Parameter VProof:Type.
+End Types.
+(* Axiom Address_eqMixin : Equality.mixin_of Address.
 
-Canonical AddrEqType := Eval hnf in EqType Address addr_eqMixin.
+Canonical AddrEqType := Eval hnf in EqType Address Address_eqMixin. *)
 
-Axiom AddrChoiceMixin : Choice.mixin_of AddrEqType.
+Section Canonicals_for_Types.
+    Definition addr_eq (a b: Address):bool := (ip a == ip b) && (port a==port b).
 
-Canonical Addr_ChoiceType := Eval hnf in ChoiceType Address AddrChoiceMixin.
+    Eval compute in addr_eq (mkAddr (1,1,1,1) 1) (mkAddr (1,1,1,2) 1).
 
-Axiom AddrCountMixin : Finite.mixin_of AddrEqType.
+    Lemma eq_addrP : Equality.axiom addr_eq. 
+    Admitted.
 
-Canonical Addr_CountType := Eval hnf in CountType Address AddrCountMixin.
+    Canonical addr_eqMixin:= Eval hnf in EqMixin eq_addrP.
 
-Axiom AddrFinMixin : Finite.mixin_of Addr_CountType.
-Canonical AddrFinType := Eval hnf in FinType Address AddrCountMixin.
+    Canonical AddrEqType := Eval hnf in EqType Address addr_eqMixin.
 
-Record Transaction:Type := mkTx {
-    from:Address;
-    to:Address;
-    val:nat;
-}.
+    Axiom AddrChoiceMixin : Choice.mixin_of AddrEqType. 
 
-Definition trans_eq (a b:Transaction):= ((from a) == (from b)) && ((to a) == (to b)) && ((val a) == (val b)).
-Lemma eq_transP : Equality.axiom trans_eq.
+    Canonical Addr_ChoiceType := Eval hnf in ChoiceType Address AddrChoiceMixin.
 
-Proof.
-    case=>sa da ma [sb] db mb; rewrite/trans_eq/=.
-    case P1: (sa == sb)=>/=; last by constructor 2; case=>/eqP; rewrite P1.
-    case P2: (da == db)=>/=; last by constructor 2; case=> _ /eqP; rewrite P2.
-    case P3: (ma == mb)=>/=; last by constructor 2; case=> _ _ /eqP; rewrite P3.
-    by constructor 1; move/eqP: P1=><-; move/eqP: P2=><-; move/eqP: P3=><-.
-Qed.
+    Axiom AddrCountMixin : Finite.mixin_of AddrEqType.
 
-Canonical Trans_eqMixin := Eval hnf in EqMixin eq_transP.
-Canonical Trans_eqType := Eval hnf in EqType Transaction Trans_eqMixin.
+    Canonical Addr_CountType := Eval hnf in CountType Address AddrCountMixin.
 
-Parameter Hash:Type.
+    Axiom AddrFinMixin : Finite.mixin_of Addr_CountType.
+    Canonical AddrFinType := Eval hnf in FinType Address AddrCountMixin.
 
-Axiom Hash_eqMixin : Equality.mixin_of Hash.
-Canonical Hash_eqType := Eval hnf in EqType Hash Hash_eqMixin.
+    Definition trans_eq (a b:Transaction):bool := ((from a) == (from b)) && ((to a) == (to b)) && ((val a) == (val b)).
+    Lemma eq_transP : Equality.axiom trans_eq.
 
-Axiom Hash_ordMixin : Ordered.mixin_of Hash_eqType.
-Canonical Hash_ordType := Eval hnf in OrdType Hash Hash_ordMixin.
+    Proof.
+        case=>sa da ma [sb] db mb; rewrite/trans_eq/=.
+        case P1: (sa == sb)=>/=; last by constructor 2; case=>/eqP; rewrite P1.
+        case P2: (da == db)=>/=; last by constructor 2; case=> _ /eqP; rewrite P2.
+        case P3: (ma == mb)=>/=; last by constructor 2; case=> _ _ /eqP; rewrite P3.
+        by constructor 1; move/eqP: P1=><-; move/eqP: P2=><-; move/eqP: P3=><-.
+    Qed.
 
-Parameter VProof:Type.
+    Canonical Trans_eqMixin := Eval hnf in EqMixin eq_transP.
+    Canonical Trans_eqType := Eval hnf in EqType Transaction Trans_eqMixin.
 
-Axiom VProof_eqMixin : Equality.mixin_of VProof.
-Canonical VProof_eqType := Eval hnf in EqType VProof VProof_eqMixin.
+    Axiom Hash_eqMixin : Equality.mixin_of Hash.
+    Canonical Hash_eqType := Eval hnf in EqType Hash Hash_eqMixin.
+
+    Axiom Hash_ordMixin : Ordered.mixin_of Hash_eqType.
+    Canonical Hash_ordType := Eval hnf in OrdType Hash Hash_ordMixin.
+
+    Axiom VProof_eqMixin : Equality.mixin_of VProof.
+    Canonical VProof_eqType := Eval hnf in EqType VProof VProof_eqMixin.
+ 
+End Canonicals_for_Types.
+
