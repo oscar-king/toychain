@@ -1,7 +1,7 @@
 open Unix
 open Util
 open Misc
-(* open Protocol *)
+open Protocol
 (* open Debug *)
 
 (* Hashtables of size 17, obviously not ideal *)
@@ -66,7 +66,7 @@ let recv_data_msg (packet: coq_Packet): unit =
   let src = packet.src in
   let msg = packet.msg in
   let lstate = get_lstate "recv_data_msg" in
-  Printf.printf "Got data from (%s,%i) msg: %s\n" from.ip (int_of_nat from.port) (printHelp msg);
+  Printf.printf "Got data from (%s,%i) msg: %s\n" src.ip (int_of_nat src.port) (printHelp msg);
   Printf.printf "Me: (%s,%i)\n" lstate.me.ip (int_of_nat lstate.me.port)
 
 (* Still need to implement hs = dom(bf) U {#tx|tx e tp} *)
@@ -81,7 +81,7 @@ let recv_connect_msg (packet: coq_Packet) (fd: file_descr): unit =
   if not (List.mem packet.src lstate.nodes) 
     then 
         the_lstate := Some {me = lstate.me; nodes = lstate.nodes @ [packet.src]};
-  Printf.printf "done processing new connection from node (%s,%i)\n" packet.from.ip (int_of_nat packet.from.port)
+  Printf.printf "done processing new connection from node (%s,%i)\n" packet.src.ip (int_of_nat packet.src.port)
 
 let setup (lstate: lstate): unit =
   Printexc.record_backtrace true;
@@ -105,7 +105,7 @@ let recv_packet (fd: file_descr):coq_Packet =
   let packet = deserialize chunk in
   let src = packet.src in 
   let msg = printHelp packet.msg in
-  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" from.ip (int_of_nat from.port) msg;
+  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" src.ip (int_of_nat src.port) msg;
   packet
 
 let send_packet (packet:coq_Packet): unit =
@@ -121,20 +121,20 @@ let recv_addr_msg (packet: coq_Packet) (addresses: coq_Address list): unit =
   let lsDiff = List.filter (fun x -> not (List.mem x locAddr)) addresses in
   let unionAddr = locAddr @ lsDiff in 
   let ps1 = List.map (fun x -> {src = lstate.me; dst = x; msg= ConnectMsg}) lsDiff in
-  let ps2 = List.map (fun x -> {src = lstate.me; dst = x; msg= AddrMsg unionAddr}) unionAddr in
+  let ps2 = List.map (fun x -> {src = lstate.me; dst = x; msg= AddrMsg (llist_to_dList unionAddr)}) unionAddr in
   let ps = ps1 @ ps2 in
 
   print_endline "------ Begin recv_addr_msg ------";
   print_endline "LocAddr\n";
-  printAddrList locAddr;
+  printAddrList (llist_to_dList locAddr);
   print_newline ();
 
   print_endline "lsDiff\n";
-  printAddrList lsDiff;
+  printAddrList (llist_to_dList lsDiff);
   print_newline ();
 
   print_endline "unionAddr\n";
-  printAddrList unionAddr;
+  printAddrList (llist_to_dList unionAddr);
   print_newline ();
 
   print_endline "------ End recv_addr_msg ------";
@@ -148,8 +148,8 @@ let recv_msg (node_fd:file_descr): unit =
   let packet = recv_packet node_fd in
   match packet.msg with
   | ConnectMsg -> recv_connect_msg packet node_fd
-  | AddrMsg ls -> recv_addr_msg packet ls
-  | DataMsg data -> recv_data_msg packet
+  | AddrMsg ls -> recv_addr_msg packet (dList_to_Llist ls)
+  | GetDataMsg data -> recv_data_msg packet
   | _ -> print_endline "nothing matched"
 
 (* Is used in 'check_for_new_connections' to iterate over list of file_descr *)

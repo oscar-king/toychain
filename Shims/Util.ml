@@ -12,14 +12,24 @@ let int_of_nat =
   | S n0 -> loop (succ acc) n0
   in loop 0
 
+let rec dList_to_Llist (l: 'a Datatypes.list)=
+  match l with 
+  | Coq_nil -> []
+  | Coq_cons (x,xs) -> x::(dList_to_Llist xs)
+
+let rec llist_to_dList l = 
+match l with 
+| [] -> Coq_nil
+| x::xs -> Coq_cons (x, llist_to_dList xs)
+
 let printAddrList (ls : peers_t): unit = 
-  List.iter (fun x -> Printf.printf "Address:\t (%s,%i)\n" x.ip (int_of_nat x.port)) ls
+  List.iter (fun x -> Printf.printf "Address:\t (%s,%i)\n" x.ip (int_of_nat x.port)) (dList_to_Llist ls)
 
 let printHelp (msg: coq_Message)= 
   match msg with
  | ConnectMsg -> "ConnectMsg"
  | AddrMsg ls -> "AddrMsg"
- | NullMsg -> "NullMsg"
+ | _ -> "Other"
 
 let rec add n m =
   match n with
@@ -63,7 +73,7 @@ let print_list (a_printer : out_channel -> 'a -> unit) (f : out_channel) (l : 'a
     | [] ->  ()
     | [a] ->  a_printer f a
     | a :: l -> Printf.fprintf f "%a; " a_printer a; go f l
-  in Printf.fprintf f "[%a]" go l
+  in Printf.fprintf f "[%a]" go (dList_to_Llist l)
 
 let getIP = function
     | (_,(x,_)) -> Some x

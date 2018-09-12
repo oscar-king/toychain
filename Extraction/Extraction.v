@@ -2,12 +2,7 @@ From Toychain
 Require Import SeqFacts Chains Blocks Forests SystemSetup Network Protocol Misc.
 Require Extraction.
 Require String.
-Require Import ExtrOcamlBasic.
-
-
-(* 
-    The realisations made (some of which are commented out) are for test purposes. e.g. I don't plan on extracting VProof to unit.
- *)
+(* Require Import ExtrOcamlBasic. *)
 
 Extraction Inline ssrbool.SimplPred.
 Extraction Inline ssrbool.simpl_pred.
@@ -16,11 +11,6 @@ Extraction Inline ssrbool.simpl_pred.
 Extract Constant Hash  => "string".
 Extract Constant VProof => "string".
 Extract Constant Timestamp  => "float".
-(* Extract Inductive String.string => "string" ["EmptyString" "String"]. *)
-(* Extract Inductive list => "list" [ "[]" "(::)" ]. *)
-(*Extract Inductive prod => "(*)"  [ "(,)" ].*)
-(* Extract Inductive bool => "bool" [ "true" "false" ]. *)
-(* Extract Inductive option => "option" ["Some" "None"]. *)
 
 (* Extract Constant genProof => "Type". *)
 (* Extract Constant txValid => "Type". *)

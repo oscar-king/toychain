@@ -10,9 +10,12 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 Require Import String.
 
+
 Section Types.
+    Inductive IPAddr:= mkIP : nat -> nat -> nat -> nat -> IPAddr.
+
     Record Address: Type := mkAddr {
-        ip:nat*nat*nat*nat;
+        ip:IPAddr;
         port:nat
     }.
 
@@ -26,14 +29,24 @@ Section Types.
 
     Parameter VProof:Type.
 End Types.
-(* Axiom Address_eqMixin : Equality.mixin_of Address.
-
-Canonical AddrEqType := Eval hnf in EqType Address Address_eqMixin. *)
 
 Section Canonicals_for_Types.
-    Definition addr_eq (a b: Address):bool := (ip a == ip b) && (port a==port b).
+    (* Implicit Types ip ipn: nat*nat*nat*nat.
+    Theorem ip_eq: forall ip ipn, {ip = ipn} + {ip <> ipn}.
+    Proof.
+        repeat decide equality.
+    Qed. *)
 
-    Eval compute in addr_eq (mkAddr (1,1,1,1) 1) (mkAddr (1,1,1,2) 1).
+    Axiom IPAddr_eqMixin : Equality.mixin_of IPAddr.
+    Canonical IPAddr_eqType := Eval hnf in EqType IPAddr IPAddr_eqMixin.
+    
+
+    Definition addr_eq (a b: Address):bool := andb (ip a == ip b) (port a == port b).
+
+    (* (ip_eq (ip a) (ip b)) && (port a==port b). *)
+
+    (* Definition addr_eq (a b: Address):bool := (string_dec (ip a) (ip b)) && (port a==port b). *)
+
 
     Lemma eq_addrP : Equality.axiom addr_eq. 
     Admitted.
