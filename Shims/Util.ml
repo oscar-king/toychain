@@ -1,16 +1,22 @@
-open Misc
 open Datatypes
 open Protocol
-(* type procAddress = mkAddr {
-  ip: string;
-  port: int
-} *)
 
 let int_of_nat =
   let rec loop acc = function
   | O -> acc
   | S n0 -> loop (succ acc) n0
   in loop 0
+
+let int_natlike_rec = fun fO fS ->
+let rec loop acc i = if i <= 0 then acc else loop (fS acc) (i-1)
+in loop fO
+
+let nat_of_int =
+  int_natlike_rec O (fun x -> S x)
+
+
+let nat_of_string s = nat_of_int (int_of_string s)
+let string_of_nat n = string_of_int (int_of_nat n)
 
 let rec dList_to_Llist (l: 'a Datatypes.list)=
   match l with 
@@ -22,8 +28,19 @@ match l with
 | [] -> Coq_nil
 | x::xs -> Coq_cons (x, llist_to_dList xs)
 
+let ip_to_string (ip):string = 
+  let (a,b,c,d) = ip in
+  let buf = Buffer.create 1024 in
+  Buffer.add_char buf '(';
+  Buffer.add_string buf (string_of_nat a);
+  Buffer.add_string buf (string_of_nat b);
+  Buffer.add_string buf (string_of_nat c);
+  Buffer.add_string buf (string_of_nat d);
+  Buffer.add_char buf ')';
+  Buffer.contents buf
+
 let printAddrList (ls : peers_t): unit = 
-  List.iter (fun x -> Printf.printf "Address:\t (%s,%i)\n" x.ip (int_of_nat x.port)) (dList_to_Llist ls)
+  List.iter (fun x -> Printf.printf "Address:\t {%s,%i}\n" (ip_to_string (x.ip)) (int_of_nat x.port)) (dList_to_Llist ls)
 
 let printHelp (msg: coq_Message)= 
   match msg with
@@ -42,17 +59,6 @@ let rec mul n m =
   match n with
   | O -> O
   | S p -> add m (mul p m)
-
-let int_natlike_rec = fun fO fS ->
- let rec loop acc i = if i <= 0 then acc else loop (fS acc) (i-1)
- in loop fO
-
-let nat_of_int =
-  int_natlike_rec O (fun x -> S x)
-
-
-let nat_of_string s = nat_of_int (int_of_string s)
-let string_of_nat n = string_of_int (int_of_nat n)
 
 let raw_bytes_of_int (x : int) : bytes =
   let buf = Bytes.make 4 '\x00' in
@@ -75,9 +81,9 @@ let print_list (a_printer : out_channel -> 'a -> unit) (f : out_channel) (l : 'a
     | a :: l -> Printf.fprintf f "%a; " a_printer a; go f l
   in Printf.fprintf f "[%a]" go (dList_to_Llist l)
 
-let getIP = function
+(* let getIP = function
     | (_,(x,_)) -> Some x
-    | _ -> None
+    | _ -> None *)
 
 let getPort = function
     | (_,(_,x)) -> Some x

@@ -12,10 +12,9 @@ Require Import String.
 
 
 Section Types.
-    Inductive IPAddr:= mkIP : nat -> nat -> nat -> nat -> IPAddr.
 
     Record Address: Type := mkAddr {
-        ip:IPAddr;
+        ip:nat*nat*nat*nat;
         port:nat
     }.
 
@@ -37,9 +36,9 @@ Section Canonicals_for_Types.
         repeat decide equality.
     Qed. *)
 
-    Axiom IPAddr_eqMixin : Equality.mixin_of IPAddr.
+    (* Axiom IPAddr_eqMixin : Equality.mixin_of IPAddr.
     Canonical IPAddr_eqType := Eval hnf in EqType IPAddr IPAddr_eqMixin.
-    
+     *)
 
     Definition addr_eq (a b: Address):bool := andb (ip a == ip b) (port a == port b).
 

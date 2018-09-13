@@ -2,7 +2,7 @@ From Toychain
 Require Import SeqFacts Chains Blocks Forests SystemSetup Network Protocol Misc.
 Require Extraction.
 Require String.
-(* Require Import ExtrOcamlBasic. *)
+Require Import ExtrOcamlBasic.
 
 Extraction Inline ssrbool.SimplPred.
 Extraction Inline ssrbool.simpl_pred.
