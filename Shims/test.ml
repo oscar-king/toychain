@@ -3,7 +3,7 @@ open Shim
 open Runner
 open Misc
 
-let me : coq_Address ref = ref {ip = mkIP 0 0 0 0; port= nat_of_int 0000}
+let me : coq_Address ref = ref {ip = (0, 0, 0, 0); port= nat_of_int 0000}
 let nodes : coq_Address list ref = ref []
 
 let usage msg =

@@ -28,7 +28,7 @@ match l with
 | [] -> Coq_nil
 | x::xs -> Coq_cons (x, llist_to_dList xs)
 
-let ip_to_string (ip):string = 
+let string_of_ip (ip):string = 
   let (a,b,c,d) = ip in
   let buf = Buffer.create 1024 in
   Buffer.add_char buf '(';
@@ -40,7 +40,7 @@ let ip_to_string (ip):string =
   Buffer.contents buf
 
 let printAddrList (ls : peers_t): unit = 
-  List.iter (fun x -> Printf.printf "Address:\t {%s,%i}\n" (ip_to_string (x.ip)) (int_of_nat x.port)) (dList_to_Llist ls)
+  List.iter (fun x -> Printf.printf "Address:\t {%s,%i}\n" (string_of_ip (x.ip)) (int_of_nat x.port)) (dList_to_Llist ls)
 
 let printHelp (msg: coq_Message)= 
   match msg with

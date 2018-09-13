@@ -66,8 +66,8 @@ let recv_data_msg (packet: coq_Packet): unit =
   let src = packet.src in
   let msg = packet.msg in
   let lstate = get_lstate "recv_data_msg" in
-  Printf.printf "Got data from (%s,%i) msg: %s\n" src.ip (int_of_nat src.port) (printHelp msg);
-  Printf.printf "Me: (%s,%i)\n" lstate.me.ip (int_of_nat lstate.me.port)
+  Printf.printf "Got data from (%s,%i) msg: %s\n" (string_of_ip src.ip) (int_of_nat src.port) (printHelp msg);
+  Printf.printf "Me: (%s,%i)\n" (string_of_ip lstate.me.ip) (int_of_nat lstate.me.port)
 
 (* Still need to implement hs = dom(bf) U {#tx|tx e tp} *)
 let recv_connect_msg (packet: coq_Packet) (fd: file_descr): unit = 
@@ -81,7 +81,7 @@ let recv_connect_msg (packet: coq_Packet) (fd: file_descr): unit =
   if not (List.mem packet.src lstate.nodes) 
     then 
         the_lstate := Some {me = lstate.me; nodes = lstate.nodes @ [packet.src]};
-  Printf.printf "done processing new connection from node (%s,%i)\n" packet.src.ip (int_of_nat packet.src.port)
+  Printf.printf "done processing new connection from node (%s,%i)\n" (string_of_ip packet.src.ip) (int_of_nat packet.src.port)
 
 let setup (lstate: lstate): unit =
   Printexc.record_backtrace true;
@@ -105,12 +105,12 @@ let recv_packet (fd: file_descr):coq_Packet =
   let packet = deserialize chunk in
   let src = packet.src in 
   let msg = printHelp packet.msg in
-  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" src.ip (int_of_nat src.port) msg;
+  Printf.printf "Packet recieved from (%s, %i). Msg: %s\n" (string_of_ip src.ip) (int_of_nat src.port) msg;
   packet
 
 let send_packet (packet:coq_Packet): unit =
   let dst = packet.dst in
-  Printf.printf "\nsending msg dst (%s,%i)\n" dst.ip (int_of_nat dst.port);
+  Printf.printf "\nsending msg dst (%s,%i)\n" (string_of_ip dst.ip) (int_of_nat dst.port);
   let fd = get_write_fd dst in
   let serializedPacket = serialize packet in
   send_chunk fd serializedPacket
